@@ -1,118 +1,70 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import * as React from 'react'
+import LoginScreen from './src/screens/login/LoginScreen'
+import MainScreen from './src/screens/main/MainScreen'
+import SignUpScreen from './src/screens/signup/SignUpScreen'
+import RecoveryScreen from './src/screens/recovery/RecoveryScreen'
+import TeamRecoveryScreen from './src/screens/teamRecovery/TeamRecoveryScreen'
+import NewTeamScreen from './src/screens/newTeam/NewTeamScreen'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { Provider, useDispatch, useSelector } from 'react-redux'
+import { store } from './src/store/redux/store'
+import { SplashScreen } from './src/screens/splash/SplashScreen'
+import { TeamScreen } from './src/screens/team/TeamScreen'
+import * as Progress from 'react-native-progress'
+import Colors from './src/assets/Colors'
+import { View } from 'react-native'
+import { showProgressBar } from './src/store/redux/progressBar'
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const Stack = createNativeStackNavigator()
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+function ProgressBar() {
+  const isLoading = useSelector((state)=>state.progressBar.isLoading)
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+  if (!isLoading) return null
+  
+  return <View style={{
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: Colors.clear
+  }}>
+      <Progress.Circle 
+        size={50} 
+        indeterminate={true} 
+        borderColor={Colors.primaryGreen}
+        borderWidth={5}
+        style={
+          { 
+            width: '100%', 
+            height: '100%', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            backgroundColor: Colors.blackHalfClear, 
+          }
+        }/>
+  </View>
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+export default function App() {
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+    <Provider store={store}>
+      <GestureHandlerRootView style={{flex:1}}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName='Splash' screenOptions={{headerShown: false}}>
+            <Stack.Screen name='Splash' component={SplashScreen}/>
+            <Stack.Screen name='Login' component={LoginScreen} options={{gestureEnabled: false}}/>
+            <Stack.Screen name='Team' component={TeamScreen}/>
+            <Stack.Screen name='Recovery' component={RecoveryScreen}/>
+            <Stack.Screen name='TeamRecovery' component={TeamRecoveryScreen}/>
+            <Stack.Screen name='NewTeam' component={NewTeamScreen}/>
+            <Stack.Screen name='SignUp' component={SignUpScreen}/>
+            <Stack.Screen name='Main' component={MainScreen}/>
+          </Stack.Navigator>
+        </NavigationContainer>
+        <ProgressBar/>  
+      </GestureHandlerRootView>
+    </Provider>
+  )
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
-
-export default App;
