@@ -1,4 +1,4 @@
-package com.hometeam
+package com.hmnjw.hometeam
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

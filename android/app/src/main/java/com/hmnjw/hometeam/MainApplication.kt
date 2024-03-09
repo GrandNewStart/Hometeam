@@ -1,4 +1,4 @@
-package com.hometeam
+package com.hmnjw.hometeam
 
 import android.app.Application
 import com.facebook.react.PackageList

@@ -14,10 +14,24 @@ import { SplashScreen } from './src/screens/splash/SplashScreen'
 import { TeamScreen } from './src/screens/team/TeamScreen'
 import * as Progress from 'react-native-progress'
 import Colors from './src/assets/Colors'
-import { View } from 'react-native'
-import { showProgressBar } from './src/store/redux/progressBar'
+import { Alert, Platform, View } from 'react-native'
+import messaging, { firebase } from '@react-native-firebase/messaging';
+import {PermissionsAndroid} from 'react-native';
 
 const Stack = createNativeStackNavigator()
+
+async function requestUserPermission() {
+  if (Platform.OS === 'android') {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+  }
+  if (Platform.OS === 'ios') {
+    const authStatus = await messaging().requestPermission();
+    const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    if (enabled) {
+      console.log('[App] requestUserPermission:', authStatus);
+    }
+  }
+}
 
 function ProgressBar() {
   const isLoading = useSelector((state)=>state.progressBar.isLoading)
@@ -48,6 +62,22 @@ function ProgressBar() {
 }
 
 export default function App() {
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
+    console.log('Message handled in the background!', remoteMessage);
+  });
+  requestUserPermission()
+
+  React.useEffect(()=>{
+    messaging().getToken().then(token => {
+      console.log('token:', token)
+    })
+    
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('New Message:', JSON.stringify(remoteMessage))
+    })
+    return unsubscribe
+  }, [])
+
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{flex:1}}>

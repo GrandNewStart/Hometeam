@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "443955754216",
+    "project_id": "hometeam-220ad",
+    "storage_bucket": "hometeam-220ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443955754216:android:d93f08078e8270984d455d",
+        "android_client_info": {
+          "package_name": "com.xperix.hometeam"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwO6w8xFoQpEQQMk1Mch3h4HqJVO9UswA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
